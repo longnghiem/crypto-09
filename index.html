@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Cryptocurrency Coins Visualizing Application</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <div class="search-bar">
+      <input id='input-search' required type="text" onkeyup="onInputChange(event)">
+      <label for="input-search">Insert coin name</label>
+    </div>
+    <div class="total-coin">
+      <h3>Number of coins</h3>
+      <div id="number-of-coins"></div>
+    </div>
+    <table id="data-table">
+      <thead>
+          <tr>
+            <th id="name" onclick='sortHandle("name")'>Name
+              <span class="arrow up-arrow"></span>
+              <span class="arrow down-arrow"></span>
+            </th>
+            <th id="price_usd" onclick='sortHandle("price_usd")'>Price (USD)
+              <span class="arrow up-arrow"></span>
+              <span class="arrow down-arrow"></span>
+            </th>
+            <th id="rank" onclick='sortHandle("rank")'>Rank
+              <span class="arrow up-arrow"></span>
+              <span class="arrow down-arrow"></span>
+            </th>
+            <th id="percent_change_24h" onclick='sortHandle("percent_change_24h")'>Change in price in 24h (%)
+              <span class="arrow up-arrow"></span>
+              <span class="arrow down-arrow"></span>
+            </th>
+          </tr>
+        </thead>
+        <tbody id='table-body'>
+          <!-- <tr> -->
+            <!-- <td></td>
+            <td></td>
+            <td></td>
+            <td></td> -->
+          <!-- </tr> -->
+        </tbody>
+    </table>
+  </main>
+
+
+
+
+
+<script src='data.json'></script>
+<script src='main.js'></script>
+</body>
+</html>
