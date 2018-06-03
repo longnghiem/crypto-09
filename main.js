@@ -1,5 +1,5 @@
 let fetched_data;
-let sorted_state = "";
+let sorted_state;
 let filtered_coins;
 const input_search = document.getElementById('input-search');
 const table_body = document.getElementById('table-body');
@@ -14,7 +14,6 @@ fetch('https://api.coinmarketcap.com/v1/ticker/?limit=2000')
   .catch((error)=>{ //optional
     console.log('there is an error: '+ error)
   })
-
 
 //building the DOM according to the data
 function render(display_coins) {
@@ -51,19 +50,23 @@ function renderItem(coin){
   coin_as_a_table_row.append(change);
   table_body.append(coin_as_a_table_row);
 };
+
 // SEARCH FUNCTION: listening to keyup event of input
 function onInputChange (e){
   filtered_coins = fetched_data.filter(coin =>{
     return coin.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
   })
-  sortHandle(sorted_state);
+  //while filtering, the table is always sorted by 'rank'
+  sortHandle('rank', true);
 }
 
 //SORT FUNCTION
-function sortHandle(type){
-  let column = document.getElementById(type);
-  if (sorted_state !== type) {
-    if (isNaN(filtered_coins[0][type])) {
+function sortHandle(type, reserved){
+  // the argument 'reserved' is used to make sure:
+  // while filtering, we don't reverse, we just keeping on sorting in ascending order
+  if (sorted_state !== type || reserved) {
+    // if user want to sort by a different type
+    if (type === 'name') {
       filtered_coins.sort((a, b) => {
         let nameA = a.name.toUpperCase();
         let nameB = b.name.toUpperCase();
@@ -78,59 +81,19 @@ function sortHandle(type){
         return a[type] - b[type];
       })
     }
-    Array.from(document.getElementsByClassName("arrow")).forEach(function(child) {
+    // Every arrow is showed...
+    Array.from(document.getElementsByClassName("arrow")).forEach(child=> {
       child.classList.remove("hidden");
     });
-    column.childNodes.forEach(function(child) {
-      if(child.className == "arrow up-arrow") {
-        child.classList.add("hidden");
-      }
-    });
-  } else {
+    // ... exept the up arrow of the targeted table head
+    document.querySelector("#" + type + " .arrow.up-arrow").classList.add("hidden");
+  } else { // if the new sorting type requested is the same as the current sorting type
+          // we just reverse the array and render it
     filtered_coins = filtered_coins.reverse();
     document.querySelectorAll("#" + type + " .arrow").forEach(function(child) {
-      if(child.classList.contains("hidden")) {
-        child.classList.remove("hidden");
-      } else {
-        child.classList.add("hidden");
-      }
+      child.classList.toggle('hidden');
     });
   }
   sorted_state = type;
   render(filtered_coins);
 }
-
-
-// function sortHandleNumber(type){
-//   if (sorted_state !== type) {
-//     filtered_coins.sort((a,b)=>{
-//       return a[type] - b[type];
-//     })
-//   }
-//   else {
-//     filtered_coins = filtered_coins.reverse();
-//   }
-//   sorted_state = type;
-//   render(filtered_coins);
-// }
-//
-// document.querySelector('.down-arrow').classList.add('hidden')
-// function sortHandleString() {
-//   if (sorted_state !== "name") {
-//     filtered_coins.sort((a, b) => {
-//       let nameA = a.name.toUpperCase();
-//       let nameB = b.name.toUpperCase();
-//       if (nameA < nameB) {
-//         return -1;
-//       } else {
-//         return 1;
-//       }
-//     });
-//   } else {
-//     filtered_coins = filtered_coins.reverse();
-//   }
-//   sorted_state = "name";
-//   render(filtered_coins);
-//   document.querySelector('.up-arrow').classList.toggle('hidden')
-//   document.querySelector('.down-arrow').classList.toggle('hidden')
-// }
